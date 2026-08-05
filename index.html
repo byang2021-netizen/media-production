@@ -220,15 +220,14 @@
       <input type="text" id="mediaTopic" placeholder="e.g., Analyzing Local Inflation Data (Supports MLO 2.1)" oninput="generatePlan()">
     </div>
 
-    <!-- Re-ordered: Primary Media Format FIRST, then Dynamic Duration -->
+    <!-- Primary Media Format FIRST, then Dynamic Duration -->
     <div class="grid-2">
       <div class="form-group">
         <label for="mediaType">1. Primary Media Format:</label>
         <select id="mediaType" onchange="updateDurationOptions()">
-          <option value="Studio On-Camera Mini-Lecture">Studio On-Camera Mini-Lecture (Video)</option>
-          <option value="Screencast with On-Screen Visuals">Screencast with On-Screen Visuals (Video)</option>
+          <option value="Studio On-Camera Mini-Lecture">Studio On-Camera Mini-Lecture (Studio Video)</option>
+          <option value="Self-Recording at Home">Self-Recording at Home (Desktop/Home Video)</option>
           <option value="Audio Podcast Episode">Audio Podcast Episode (Audio)</option>
-          <option value="Demonstration / Case Study Video">Demonstration / Case Study Video (Video)</option>
         </select>
       </div>
 
@@ -276,12 +275,19 @@
 </div>
 
 <script>
-  // Duration presets based on media type
-  const videoDurations = [
+  // Duration presets based on selected media format
+  const studioDurations = [
     { value: "5 minutes (~500 words max)", label: "5 minutes (~500 words max)" },
     { value: "6 minutes (~600 words max)", label: "6 minutes (~600 words max)", selected: true },
     { value: "7 minutes (~700 words max)", label: "7 minutes (~700 words max)" },
     { value: "8 minutes (~800 words max)", label: "8 minutes (~800 words max)" }
+  ];
+
+  const selfRecordDurations = [
+    { value: "5–7 minutes (Focused Mini-Lecture)", label: "5–7 minutes (Focused Mini-Lecture)" },
+    { value: "8–10 minutes (Standard Module Walk-through)", label: "8–10 minutes (Standard Walk-through)", selected: true },
+    { value: "12 minutes (~1,400 words max)", label: "12 minutes (~1,400 words max)" },
+    { value: "15 minutes (~1,800 words max)", label: "15 minutes (~1,800 words max)" }
   ];
 
   const audioDurations = [
@@ -298,8 +304,14 @@
     // Clear current options
     durationSelect.innerHTML = "";
 
-    const isAudio = mediaType.includes("Audio Podcast");
-    const optionsToUse = isAudio ? audioDurations : videoDurations;
+    let optionsToUse;
+    if (mediaType.includes("Studio On-Camera")) {
+      optionsToUse = studioDurations;
+    } else if (mediaType.includes("Self-Recording")) {
+      optionsToUse = selfRecordDurations;
+    } else {
+      optionsToUse = audioDurations;
+    }
 
     optionsToUse.forEach(opt => {
       const optionEl = document.createElement("option");
@@ -374,7 +386,7 @@
     });
     const visualText = checkedVisuals.length > 0 ? checkedVisuals.join(", ") : "Standard presentation visuals";
 
-    const { Document, Packer, Paragraph, TextRun, HeadingLevel, BorderStyle } = window.docx;
+    const { Document, Packer, Paragraph, TextRun, HeadingLevel } = window.docx;
 
     // Build Word Document Programmatically
     const doc = new Document({
@@ -409,7 +421,7 @@
             spacing: { before: 200, after: 100 }
           }),
 
-          // Bulleted/Numbered List for Talking Points
+          // List for Talking Points
           ...pointsArray.map((pt, idx) => new Paragraph({
             children: [
               new TextRun({ text: `${idx + 1}. `, bold: true }),

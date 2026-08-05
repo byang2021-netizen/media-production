@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Build Your Media Plan Activity</title>
-  <!-- jsPDF directly from CDN for programmatic PDF building -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- docx.js for direct Word document generation -->
+  <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+  <!-- FileSaver.js to save the generated blob directly -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  
   <style>
     :root {
       --gw-navy: #033C5A;
@@ -127,29 +130,29 @@
       color: #222222;
     }
 
-    .pdf-header {
+    .doc-header {
       border-bottom: 2px solid var(--gw-navy);
       padding-bottom: 12px;
       margin-bottom: 16px;
     }
 
-    .pdf-header h3 {
+    .doc-header h3 {
       margin: 0;
       color: var(--gw-navy);
       font-size: 1.3rem;
     }
 
-    .pdf-header p {
+    .doc-header p {
       margin: 4px 0 0 0;
       color: #666;
       font-size: 0.85rem;
     }
 
-    .pdf-field {
+    .doc-field {
       margin-bottom: 12px;
     }
 
-    .pdf-field strong {
+    .doc-field strong {
       color: var(--gw-navy);
     }
 
@@ -196,7 +199,7 @@
       <span class="badge">Authentic Application</span>
     </h2>
     <p style="font-size: 0.92rem; color: #555; margin-bottom: 20px;">
-      Use this interactive builder to map out a focused mini-lecture for your online course. As you complete the fields below, your structured Media Plan will generate in real-time. You can then directly download a PDF copy to share during your Phase 1/Phase 2 instructional design kickoff consultation.
+      Use this interactive builder to map out a focused media segment for your online course. As you complete the fields below, your structured Media Plan will generate in real-time. You can then download an editable Word document (.docx) to refine during your Phase 1/Phase 2 instructional design kickoff consultation.
     </p>
 
     <!-- Form Inputs -->
@@ -213,28 +216,26 @@
     </div>
 
     <div class="form-group">
-      <label for="mediaTopic">Mini-Lecture Topic & Core Objective:</label>
+      <label for="mediaTopic">Media Topic & Core Objective:</label>
       <input type="text" id="mediaTopic" placeholder="e.g., Analyzing Local Inflation Data (Supports MLO 2.1)" oninput="generatePlan()">
     </div>
 
+    <!-- Re-ordered: Primary Media Format FIRST, then Dynamic Duration -->
     <div class="grid-2">
       <div class="form-group">
-        <label for="targetLength">Target Video Duration:</label>
-        <select id="targetLength" onchange="generatePlan()">
-          <option value="5 minutes (~500 words max)">5 minutes (~500 words max)</option>
-          <option value="6 minutes (~600 words max)" selected>6 minutes (~600 words max)</option>
-          <option value="7 minutes (~700 words max)">7 minutes (~700 words max)</option>
-          <option value="8 minutes (~800 words max)">8 minutes (~800 words max)</option>
+        <label for="mediaType">1. Primary Media Format:</label>
+        <select id="mediaType" onchange="updateDurationOptions()">
+          <option value="Studio On-Camera Mini-Lecture">Studio On-Camera Mini-Lecture (Video)</option>
+          <option value="Screencast with On-Screen Visuals">Screencast with On-Screen Visuals (Video)</option>
+          <option value="Audio Podcast Episode">Audio Podcast Episode (Audio)</option>
+          <option value="Demonstration / Case Study Video">Demonstration / Case Study Video (Video)</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label for="mediaType">Primary Media Format:</label>
-        <select id="mediaType" onchange="generatePlan()">
-          <option value="Studio On-Camera Mini-Lecture">Studio On-Camera Mini-Lecture</option>
-          <option value="Screencast with On-Screen Visuals">Screencast with On-Screen Visuals</option>
-          <option value="Audio Podcast Episode">Audio Podcast Episode</option>
-          <option value="Demonstration / Case Study Video">Demonstration / Case Study Video</option>
+        <label for="targetLength">2. Target Media Duration:</label>
+        <select id="targetLength" onchange="generatePlan()">
+          <!-- Options populated dynamically via JavaScript -->
         </select>
       </div>
     </div>
@@ -242,8 +243,8 @@
     <!-- Talking Points Input -->
     <div class="form-group">
       <label for="talkingPoints">Key Talking Points (1 per line):</label>
-      <textarea id="talkingPoints" rows="4" placeholder="Enter key concepts or sub-topics to cover in this video:&#10;1. Introduction to CPI calculation&#10;2. Common anomalies in urban dataset modeling&#10;3. Key takeaways for Module 2 assignment" oninput="generatePlan()"></textarea>
-      <small style="color: #666; font-size: 0.82rem;">Keeping your video focused on 2–4 key talking points helps ensure high student engagement and script pacing.</small>
+      <textarea id="talkingPoints" rows="4" placeholder="Enter key concepts or sub-topics to cover in this segment:&#10;1. Introduction to CPI calculation&#10;2. Common anomalies in urban dataset modeling&#10;3. Key takeaways for Module 2 assignment" oninput="generatePlan()"></textarea>
+      <small style="color: #666; font-size: 0.82rem;">Keeping your content focused on 2–4 key talking points helps ensure high student engagement and pacing.</small>
     </div>
 
     <!-- Visual Supports Selection -->
@@ -259,8 +260,8 @@
 
     <!-- Generated Preview Card -->
     <div class="output-card" id="planOutput">
-      <div class="pdf-header">
-        <h3>📹 Mini-Lecture Media Plan Draft</h3>
+      <div class="doc-header">
+        <h3>📹 Media Production Plan Draft</h3>
         <p>Generated via Course Design Media Planning Tool</p>
       </div>
       <em style="color: #666;">Complete the form fields above to view your formatted plan...</em>
@@ -268,13 +269,49 @@
 
     <!-- Action Button -->
     <div class="btn-group">
-      <button class="btn-action" onclick="downloadDirectPDF()">📥 Download Media Plan as PDF</button>
+      <button class="btn-action" onclick="downloadWordDoc()">📄 Download Media Plan as Editable Word Doc (.docx)</button>
     </div>
   </div>
 
 </div>
 
 <script>
+  // Duration presets based on media type
+  const videoDurations = [
+    { value: "5 minutes (~500 words max)", label: "5 minutes (~500 words max)" },
+    { value: "6 minutes (~600 words max)", label: "6 minutes (~600 words max)", selected: true },
+    { value: "7 minutes (~700 words max)", label: "7 minutes (~700 words max)" },
+    { value: "8 minutes (~800 words max)", label: "8 minutes (~800 words max)" }
+  ];
+
+  const audioDurations = [
+    { value: "5–8 minutes (Short Focus Episode)", label: "5–8 minutes (Short Focus Episode)" },
+    { value: "10–12 minutes (Standard Topic Deep-Dive)", label: "10–12 minutes (Standard Deep-Dive)", selected: true },
+    { value: "15 minutes (~1,800 words max)", label: "15 minutes (~1,800 words max)" },
+    { value: "20 minutes (~2,400 words max)", label: "20 minutes (~2,400 words max)" }
+  ];
+
+  function updateDurationOptions() {
+    const mediaType = document.getElementById("mediaType").value;
+    const durationSelect = document.getElementById("targetLength");
+    
+    // Clear current options
+    durationSelect.innerHTML = "";
+
+    const isAudio = mediaType.includes("Audio Podcast");
+    const optionsToUse = isAudio ? audioDurations : videoDurations;
+
+    optionsToUse.forEach(opt => {
+      const optionEl = document.createElement("option");
+      optionEl.value = opt.value;
+      optionEl.textContent = opt.label;
+      if (opt.selected) optionEl.selected = true;
+      durationSelect.appendChild(optionEl);
+    });
+
+    generatePlan();
+  }
+
   function generatePlan() {
     const course = document.getElementById("courseModule").value.trim() || "[Course & Module]";
     const faculty = document.getElementById("facultyName").value.trim() || "[Faculty Member]";
@@ -303,16 +340,16 @@
     const visualText = checkedVisuals.length > 0 ? checkedVisuals.join(", ") : "Standard presentation visuals";
 
     const formattedOutput = `
-      <div class="pdf-header">
-        <h3>📹 Mini-Lecture Media Production Plan</h3>
+      <div class="doc-header">
+        <h3>📹 Media Production Plan Draft</h3>
         <p>Instructional Design & Media Development Blueprint</p>
       </div>
-      <div class="pdf-field"><strong>Faculty / Author:</strong> ${escapeHtml(faculty)}</div>
-      <div class="pdf-field"><strong>Course & Module:</strong> ${escapeHtml(course)}</div>
-      <div class="pdf-field"><strong>Topic & Learning Objective:</strong> ${escapeHtml(topic)}</div>
-      <div class="pdf-field"><strong>Media Format & Duration:</strong> ${type} (${length})</div>
-      <div class="pdf-field"><strong>Key Talking Points:</strong> ${pointsMarkup}</div>
-      <div class="pdf-field"><strong>Requested Visual & Graphic Supports:</strong> ${escapeHtml(visualText)}</div>
+      <div class="doc-field"><strong>Faculty / Author:</strong> ${escapeHtml(faculty)}</div>
+      <div class="doc-field"><strong>Course & Module:</strong> ${escapeHtml(course)}</div>
+      <div class="doc-field"><strong>Topic & Learning Objective:</strong> ${escapeHtml(topic)}</div>
+      <div class="doc-field"><strong>Media Format & Duration:</strong> ${type} (${length})</div>
+      <div class="doc-field"><strong>Key Talking Points:</strong> ${pointsMarkup}</div>
+      <div class="doc-field"><strong>Requested Visual & Graphic Supports:</strong> ${escapeHtml(visualText)}</div>
       <div style="margin-top: 20px; padding-top: 12px; border-top: 1px solid #EEE; font-size: 0.82rem; color: #666;">
         <em>Next Step: Share this plan during your instructional design kickoff session to guide script outline and storyboarding.</em>
       </div>
@@ -321,14 +358,7 @@
     document.getElementById("planOutput").innerHTML = formattedOutput;
   }
 
-  function downloadDirectPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({
-      orientation: "portrait",
-      unit: "pt",
-      format: "letter"
-    });
-
+  function downloadWordDoc() {
     const faculty = document.getElementById("facultyName").value.trim() || "Faculty";
     const course = document.getElementById("courseModule").value.trim() || "[Course & Module]";
     const topic = document.getElementById("mediaTopic").value.trim() || "[Topic & Learning Objective]";
@@ -344,79 +374,86 @@
     });
     const visualText = checkedVisuals.length > 0 ? checkedVisuals.join(", ") : "Standard presentation visuals";
 
-    // Document Dimensions
-    const margin = 40;
-    let y = margin + 20;
+    const { Document, Packer, Paragraph, TextRun, HeadingLevel, BorderStyle } = window.docx;
 
-    // Header Background & Title
-    doc.setFillColor(3, 60, 90); // #033C5A GW Navy
-    doc.rect(margin, y - 15, 532, 45, 'F');
+    // Build Word Document Programmatically
+    const doc = new Document({
+      sections: [{
+        properties: {},
+        children: [
+          // Title
+          new Paragraph({
+            text: "Media Production Plan",
+            heading: HeadingLevel.HEADING_1,
+            spacing: { after: 100 }
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({ text: "Instructional Design & Media Development Blueprint", italic: true, color: "555555", size: 20 })
+            ],
+            spacing: { after: 300 }
+          }),
 
-    doc.setTextColor(255, 255, 255);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(16);
-    doc.text("Mini-Lecture Media Production Plan", margin + 15, y + 12);
-    
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.text("Instructional Design & Media Development Blueprint", margin + 15, y + 24);
+          // Metadata Fields
+          createDocField("Faculty / Author:", faculty),
+          createDocField("Course & Module:", course),
+          createDocField("Topic & Objective:", topic),
+          createDocField("Media Format:", type),
+          createDocField("Target Duration:", length),
 
-    y += 55;
+          // Talking Points Heading
+          new Paragraph({
+            children: [
+              new TextRun({ text: "Key Talking Points:", bold: true, color: "033C5A", size: 22 })
+            ],
+            spacing: { before: 200, after: 100 }
+          }),
 
-    // Field Helper
-    function addPDFField(label, value) {
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
-      doc.setTextColor(3, 60, 90);
-      doc.text(label, margin, y);
+          // Bulleted/Numbered List for Talking Points
+          ...pointsArray.map((pt, idx) => new Paragraph({
+            children: [
+              new TextRun({ text: `${idx + 1}. `, bold: true }),
+              new TextRun({ text: pt })
+            ],
+            spacing: { after: 80 },
+            indent: { left: 360 }
+          })),
 
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(34, 34, 34);
-      
-      const splitText = doc.splitTextToSize(value, 380);
-      doc.text(splitText, margin + 140, y);
-      y += (splitText.length * 14) + 10;
+          // Visual Supports
+          createDocField("Requested Visual Supports:", visualText, 200),
+
+          // Footer Note
+          new Paragraph({
+            children: [
+              new TextRun({ 
+                text: "Next Step: Share this plan during your instructional design kickoff session to guide script outline and storyboarding.",
+                italic: true,
+                color: "666666",
+                size: 18
+              })
+            ],
+            spacing: { before: 400 }
+          })
+        ]
+      }]
+    });
+
+    // Helper function for Word metadata key-value rows
+    function createDocField(label, value, spaceBefore = 100) {
+      return new Paragraph({
+        children: [
+          new TextRun({ text: label + " ", bold: true, color: "033C5A", size: 22 }),
+          new TextRun({ text: value, size: 22 })
+        ],
+        spacing: { before: spaceBefore, after: 100 }
+      });
     }
 
-    addPDFField("Faculty / Author:", faculty);
-    addPDFField("Course & Module:", course);
-    addPDFField("Topic & Objective:", topic);
-    addPDFField("Format & Duration:", `${type} (${length})`);
-
-    // Talking Points Section
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
-    doc.setTextColor(3, 60, 90);
-    doc.text("Key Talking Points:", margin, y);
-
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(34, 34, 34);
-    
-    let tpY = y;
-    pointsArray.forEach((pt, index) => {
-      const lineText = `${index + 1}. ${pt}`;
-      const splitPt = doc.splitTextToSize(lineText, 380);
-      doc.text(splitPt, margin + 140, tpY);
-      tpY += (splitPt.length * 14);
+    // Generate and Download .docx file
+    Packer.toBlob(doc).then(blob => {
+      const safeFilename = `Media_Plan_${faculty.replace(/[^a-z0-9]/gi, '_')}.docx`;
+      saveAs(blob, safeFilename);
     });
-    y = tpY + 10;
-
-    addPDFField("Visual Supports:", visualText);
-
-    // Divider Line & Footer
-    y += 10;
-    doc.setDrawColor(200, 200, 200);
-    doc.line(margin, y, margin + 532, y);
-
-    y += 20;
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(9);
-    doc.setTextColor(100, 100, 100);
-    doc.text("Next Step: Share this plan during your instructional design kickoff session to guide script outline and storyboarding.", margin, y);
-
-    // Directly save file to downloads folder
-    const safeFilename = `Media_Plan_${faculty.replace(/[^a-z0-9]/gi, '_')}.pdf`;
-    doc.save(safeFilename);
   }
 
   function escapeHtml(text) {
@@ -424,7 +461,9 @@
   }
 
   // Initialize display on load
-  window.onload = generatePlan;
+  window.onload = function() {
+    updateDurationOptions();
+  };
 </script>
 
 </body>

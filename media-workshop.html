@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media Production Workshop & Planning Tool</title>
+  <style>
+    :root {
+      --gw-navy: #033C5A;
+      --gw-gold: #AA9868;
+      --gw-buff-light: #FDFBF7;
+      --gw-buff-card: #F5EFE6;
+      --text: #222222;
+      --success: #2e7d32;
+      --error: #c62828;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--gw-buff-light);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(3, 60, 90, 0.15);
+      border-top: 5px solid var(--gw-navy);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    h2 {
+      color: var(--gw-navy);
+      margin-top: 0;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      background: var(--gw-gold);
+      color: #FFFFFF;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    /* --- ACTIVITY 1 STYLES --- */
+    .scenario-box {
+      background: var(--gw-buff-card);
+      border-left: 4px solid var(--gw-navy);
+      padding: 16px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+    }
+
+    .scenario-title {
+      font-weight: bold;
+      color: var(--gw-navy);
+      margin-bottom: 6px;
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .opt-btn {
+      background: #FFFFFF;
+      border: 1px solid #CCC;
+      padding: 10px 14px;
+      border-radius: 6px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .opt-btn:hover {
+      background: #E8EEF3;
+      border-color: var(--gw-navy);
+    }
+
+    .feedback-msg {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: bold;
+      display: none;
+    }
+
+    .feedback-msg.correct {
+      background: #E8F5E9;
+      color: var(--success);
+      border: 1px solid #A5D6A7;
+    }
+
+    .feedback-msg.incorrect {
+      background: #FFEBEE;
+      color: var(--error);
+      border: 1px solid #FFCDD2;
+    }
+
+    /* --- ACTIVITY 2 STYLES --- */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      color: var(--gw-navy);
+      margin-bottom: 6px;
+      font-size: 0.92rem;
+    }
+
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #CCC;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 8px;
+    }
+
+    .checkbox-item {
+      background: #FAFAFA;
+      border: 1px solid #E0E0E0;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .output-card {
+      background: #FFFFFF;
+      border: 2px dashed var(--gw-navy);
+      padding: 18px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 0.9rem;
+    }
+
+    .btn-action {
+      background: var(--gw-navy);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: opacity 0.2s;
+    }
+
+    .btn-action:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ACTIVITY 1 -->
+  <div class="section-card">
+    <h2>
+      <span>🎮 Activity 1: Media Production Decision Tree</span>
+      <span class="badge">Formative Practice</span>
+    </h2>
+    <p style="font-size: 0.92rem; color: #555;">
+      Test your knowledge of our media production workflow, guidelines, and production standards before starting your project[cite: 1]!
+    </p>
+
+    <!-- Scenario 1 -->
+    <div class="scenario-box">
+      <div class="scenario-title">Scenario A: Script Length & Video Duration</div>
+      <p style="margin: 4px 0 10px 0; font-size: 0.9rem;">
+        Dr. Smith drafted a mini-lecture script that contains <strong>1,200 words</strong>. According to our guidelines, is this video ready for studio recording[cite: 1]?
+      </p>
+      <div class="options-group">
+        <button class="opt-btn" onclick="checkA(false, this)">A) Yes, 1,200 words is standard for a single instructional video[cite: 1].</button>
+        <button class="opt-btn" onclick="checkA(true, this)">B) No, 1,200 words will run ~12 minutes. Scripts should be trimmed to ~500–800 words (5–8 minutes)[cite: 1].</button>
+      </div>
+      <div id="fbA" class="feedback-msg"></div>
+    </div>
+
+    <!-- Scenario 2 -->
+    <div class="scenario-box">
+      <div class="scenario-title">Scenario B: Visual Design Meetings</div>
+      <p style="margin: 4px 0 10px 0; font-size: 0.9rem;">
+        Professor Patel is developing a 4-part <strong>Audio Podcast series</strong> for Module 3[cite: 1]. How many visual design pre-production meetings will they attend[cite: 1]?
+      </p>
+      <div class="options-group">
+        <button class="opt-btn" onclick="checkB(false, this)">A) Two meetings: Visual Brainstorming and Storyboard Finalization[cite: 1].</button>
+        <button class="opt-btn" onclick="checkB(true, this)">B) Zero meetings: Podcast projects typically do not require visual design meetings[cite: 1].</button>
+      </div>
+      <div id="fbB" class="feedback-msg"></div>
+    </div>
+
+    <!-- Scenario 3 -->
+    <div class="scenario-box">
+      <div class="scenario-title">Scenario C: Workflow Ownership</div>
+      <p style="margin: 4px 0 10px 0; font-size: 0.9rem;">
+        Who is primarily responsible for editing footage, refining pacing, incorporating graphics, and assembling the final presentation after recording[cite: 1]?
+      </p>
+      <div class="options-group">
+        <button class="opt-btn" onclick="checkC(false, this)">A) The Faculty Lead[cite: 1].</button>
+        <button class="opt-btn" onclick="checkC(true, this)">B) The Media Producer[cite: 1].</button>
+        <button class="opt-btn" onclick="checkC(false, this)">C) The Instructional Designer[cite: 1].</button>
+      </div>
+      <div id="fbC" class="feedback-msg"></div>
+    </div>
+  </div>
+
+
+  <!-- ACTIVITY 2 -->
+  <div class="section-card">
+    <h2>
+      <span>🛠️ Activity 2: Build Your Media Plan</span>
+      <span class="badge">Authentic Application</span>
+    </h2>
+    <p style="font-size: 0.92rem; color: #555;">
+      Use this interactive builder to draft a mini-lecture media plan for your course[cite: 1]. As you fill in the fields, your formatted plan will generate below, ready to bring to your Phase 1 Kickoff Meeting[cite: 1]!
+    </p>
+
+    <div class="form-group">
+      <label for="courseModule">Course Name & Module:</label>
+      <input type="text" id="courseModule" placeholder="e.g., PUBH 6001 - Module 2: Epidemiological Data" oninput="generatePlan()">
+    </div>
+
+    <div class="form-group">
+      <label for="mediaTopic">Mini-Lecture Topic & Core Objective:</label>
+      <input type="text" id="mediaTopic" placeholder="e.g., Analyzing Local Inflation Anomalies (Supports MLO 2.1)" oninput="generatePlan()">
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div class="form-group">
+        <label for="targetLength">Target Video Duration:</label>
+        <select id="targetLength" onchange="generatePlan()">
+          <option value="5 minutes (~500 words)">5 minutes (~500 words)</option>
+          <option value="6 minutes (~600 words)" selected>6 minutes (~600 words)</option>
+          <option value="7 minutes (~700 words)">7 minutes (~700 words)</option>
+          <option value="8 minutes (~800 words)">8 minutes (~800 words)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="mediaType">Primary Media Format:</label>
+        <select id="mediaType" onchange="generatePlan()">
+          <option value="Studio On-Camera Mini-Lecture">Studio On-Camera Mini-Lecture</option>
+          <option value="Screencast with On-Screen Visuals">Screencast with On-Screen Visuals</option>
+          <option value="Audio Podcast Episode">Audio Podcast Episode</option>
+          <option value="Demonstration / Case Study Video">Demonstration / Case Study Video</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Recommended Visual & Graphic Elements (Select all that apply)[cite: 1]:</label>
+      <div class="checkbox-grid">
+        <label class="checkbox-item"><input type="checkbox" value="Key Term Callout Graphics" onchange="generatePlan()"> Key Term Callout Graphics</label>
+        <label class="checkbox-item"><input type="checkbox" value="Data Charts / Infographics" onchange="generatePlan()"> Data Charts / Infographics</label>
+        <label class="checkbox-item"><input type="checkbox" value="Custom Motion Animations" onchange="generatePlan()"> Custom Motion Animations</label>
+        <label class="checkbox-item"><input type="checkbox" value="Studio B-Roll / Visual Storyboarding" onchange="generatePlan()"> Studio B-Roll / Storyboarding</label>
+      </div>
+    </div>
+
+    <!-- Output Preview -->
+    <div class="output-card" id="planOutput">
+      <em style="color: #666;">Fill in the fields above to preview your custom Media Plan Draft...</em>
+    </div>
+
+    <div style="margin-top: 16px; text-align: center;">
+      <button class="btn-action" onclick="copyMediaPlan()">📋 Copy Media Plan to Clipboard</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Activity 1 Logic
+  function checkA(isCorrect, btn) {
+    const fb = document.getElementById("fbA");
+    fb.style.display = "block";
+    if (isCorrect) {
+      fb.className = "feedback-msg correct";
+      fb.innerHTML = "✔ <strong>Correct!</strong> 1,200 words yields ~12 minutes[cite: 1]. Keeping videos between 5–8 minutes (~500–800 words) maximizes student attention and learning retention[cite: 1].";
+    } else {
+      fb.className = "feedback-msg incorrect";
+      fb.innerHTML = "✖ <strong>Try Again!</strong> At 100 words per minute, 1,200 words equals 12 minutes[cite: 1]. Research recommends keeping instructional videos between 5–8 minutes[cite: 1].";
+    }
+  }
+
+  function checkB(isCorrect, btn) {
+    const fb = document.getElementById("fbB");
+    fb.style.display = "block";
+    if (isCorrect) {
+      fb.className = "feedback-msg correct";
+      fb.innerHTML = "✔ <strong>Correct!</strong> Because podcasts focus exclusively on audio, they typically skip the visual design and storyboarding meetings[cite: 1]!";
+    } else {
+      fb.className = "feedback-msg incorrect";
+      fb.innerHTML = "✖ <strong>Try Again!</strong> Visual design meetings focus on graphics, storyboards, and camera shots[cite: 1]. Podcast projects do not require this step[cite: 1].";
+    }
+  }
+
+  function checkC(isCorrect, btn) {
+    const fb = document.getElementById("fbC");
+    fb.style.display = "block";
+    if (isCorrect) {
+      fb.className = "feedback-msg correct";
+      fb.innerHTML = "✔ <strong>Correct!</strong> In post-production, the Media Producer edits footage, refines pacing, adds animations/graphics, and builds the fine cut for faculty review[cite: 1].";
+    } else {
+      fb.className = "feedback-msg incorrect";
+      fb.innerHTML = "✖ <strong>Try Again!</strong> The Media Producer handles post-production editing, graphics assembly, and pacing[cite: 1].";
+    }
+  }
+
+  // Activity 2 Logic
+  function generatePlan() {
+    const course = document.getElementById("courseModule").value || "[Your Course & Module]";
+    const topic = document.getElementById("mediaTopic").value || "[Your Topic & Objective]";
+    const length = document.getElementById("targetLength").value;
+    const type = document.getElementById("mediaType").value;
+
+    const checkedVisuals = [];
+    document.querySelectorAll('.checkbox-grid input[type="checkbox"]:checked').forEach(cb => {
+      checkedVisuals.push(cb.value);
+    });
+
+    const visualText = checkedVisuals.length > 0 ? checkedVisuals.join(", ") : "None selected yet";
+
+    const formattedOutput = `
+      <strong style="color: #033C5A; font-size: 1rem;">🎥 Media Production Plan Draft</strong><br>
+      • <strong>Course / Module Context:</strong> ${course}<br>
+      • <strong>Topic & Objective:</strong> ${topic}<br>
+      • <strong>Format & Target Duration:</strong> ${type} (${length})<br>
+      • <strong>Requested Visual / Graphic Supports:</strong> ${visualText}<br>
+      • <strong>Next Step:</strong> Bring this draft to your Phase 1 Kickoff Meeting with your ID & Media Producer[cite: 1]!
+    `;
+
+    document.getElementById("planOutput").innerHTML = formattedOutput;
+  }
+
+  function copyMediaPlan() {
+    const outputDiv = document.getElementById("planOutput");
+    const tempText = document.createElement("textarea");
+    tempText.value = outputDiv.innerText;
+    document.body.appendChild(tempText);
+    tempText.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempText);
+    alert("Media Plan copied to clipboard! You can now paste this into your design documents or email your ID.");
+  }
+</script>
+
+</body>
+</html>

@@ -160,33 +160,29 @@
 
     .btn-group {
       display: flex;
-      gap: 12px;
       justify-content: center;
-      margin-top: 20px;
-      flex-wrap: wrap;
+      margin-top: 24px;
     }
 
     .btn-action {
       background: var(--gw-navy);
       color: white;
       border: none;
-      padding: 12px 22px;
+      padding: 14px 28px;
       border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
-      font-size: 0.95rem;
+      font-size: 1rem;
       transition: background-color 0.2s, opacity 0.2s;
       display: flex;
       align-items: center;
       gap: 8px;
+      box-shadow: 0 2px 6px rgba(3, 60, 90, 0.2);
     }
 
     .btn-action:hover {
       opacity: 0.92;
-    }
-
-    .btn-secondary {
-      background: #555555;
+      box-shadow: 0 4px 10px rgba(3, 60, 90, 0.3);
     }
   </style>
 </head>
@@ -270,10 +266,9 @@
       <em style="color: #666;">Complete the form fields above to view your formatted plan...</em>
     </div>
 
-    <!-- Action Buttons -->
+    <!-- Action Button -->
     <div class="btn-group">
       <button class="btn-action" onclick="downloadDirectPDF()">📥 Download Media Plan as PDF</button>
-      <button class="btn-action btn-secondary" onclick="copyMediaPlan()">📋 Copy Text to Clipboard</button>
     </div>
   </div>
 
@@ -422,17 +417,6 @@
     // Directly save file to downloads folder
     const safeFilename = `Media_Plan_${faculty.replace(/[^a-z0-9]/gi, '_')}.pdf`;
     doc.save(safeFilename);
-  }
-
-  function copyMediaPlan() {
-    const outputDiv = document.getElementById("planOutput");
-    const tempText = document.createElement("textarea");
-    tempText.value = outputDiv.innerText;
-    document.body.appendChild(tempText);
-    tempText.select();
-    document.execCommand("copy");
-    document.body.removeChild(tempText);
-    alert("Media Plan copied to clipboard!");
   }
 
   function escapeHtml(text) {

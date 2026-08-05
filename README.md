@@ -1,54 +1,45 @@
-# 🎥 Interactive Media Production Workshop & Planning Tool
+# 🎥 Interactive Media Plan Generator for Online Learning
 
-An interactive, web-based learning activity designed for faculty professional development in higher education. This tool scaffolds the online media development workflow by combining formative practice with authentic task application.
-
----
-
-## 🎯 Pedagogical Goals & Alignment
-
-* **Target Audience:** Higher education faculty preparing to design and record media for online/blended courses.
-* **Module Alignment:** Phase 2 (Content Design & Production Prep).
-* **Key Learning Outcomes:**
-  * Identify key stages, guidelines, and roles across the Media Production Pipeline (Pre-Production, Production, Post-Production).
-  * Apply video chunking standards (~500–800 words / 5–8 minutes) and production constraints.
-  * Formulate an actionable, objective-aligned Mini-Lecture Media Plan draft for Phase 1/Phase 2 instructional design consultations.
+An interactive, web-based planning tool designed for higher education faculty professional development. This application guides instructors through structuring focused, chunked mini-lectures and instantly generates a downloadable PDF blueprint to streamline Phase 1/Phase 2 Instructional Design consultations.
 
 ---
 
-## 🧩 Embedded Activities
+## 🎯 Pedagogical Intent & Value
 
-1. **Activity 1: Media Production Decision Tree (Formative Practice)**
-   * Scenario-based interactive challenge testing faculty understanding of script length limits, podcast visual requirements, and team member roles.
-   * Provides immediate, accessible feedback with visual symbols (WCAG SC 1.4.1 compliant).
-2. **Activity 2: Build Your Media Plan (Authentic Application)**
-   * Guided interactive form allowing faculty to draft a structured media plan.
-   * Automatically generates a formatted text outline that faculty can copy/paste directly into design documents or consultation requests.
+* **Scaffolded Planning:** Helps faculty transition from broad lecture ideas to structured, bite-sized mini-lectures (~5–8 minutes / ~500–800 words max).
+* **Chunking & Focus:** Encourages instructors to limit content to 2–4 key talking points per video, supporting cognitive load management and student retention.
+* **Consultation Artifact:** Generates an actionable, standardized PDF artifact that faculty can bring to pre-production and storyboarding kickoff meetings with Instructional Designers and Media Producers.
 
 ---
 
-## 💻 Tech Stack & Accessibility
+## 🛠️ Features & Technical Highlights
 
-* **Framework:** Pure HTML5, CSS3, and vanilla JavaScript (no external library dependencies).
-* **Branding:** Aligned with GW Institutional Branding (GW Navy `#033C5A` and GW Buff `#FDFBF7` / `#F5EFE6`).
-* **Accessibility Standards:** Meets WCAG 2.1 AA standards (high-contrast ratios, non-color-dependent status indicators, accessible DOM elements).
+* **Real-Time Dynamic Preview:** Formats the media plan in real-time as faculty complete the form inputs.
+* **Direct Client-Side PDF Generation:** Uses `jsPDF` to compile and directly download a clean, styled PDF (`Media_Plan_[FacultyName].pdf`) into the user's downloads folder with zero print dialog friction or browser dependency.
+* **Institutional Branding:** Aligned with university palette standards (GW Navy `#033C5A` and GW Buff `#FDFBF7`).
+* **Zero Backend Dependencies:** Fully client-side application running on pure HTML5, CSS3, and vanilla JavaScript.
 
 ---
 
-## 🚀 Deployment & LMS Integration
+## 🚀 GitHub Pages Deployment
 
-### GitHub Pages Setup
-1. Repository Settings $\rightarrow$ Pages.
-2. Source: `Deploy from a branch`.
-3. Branch: `main` (or `master`) $\rightarrow$ Folder: `/ (root)`.
+1. Rename the main code file to `index.html` and place it in the root directory.
+2. Go to **Repository Settings** $\rightarrow$ **Pages**.
+3. Under **Source**, select **Deploy from a branch**.
+4. Set the **Branch** to `main` (or `master`) and folder to `/ (root)`.
+5. Save. Your live link will be available at: `https://<your-username>.github.io/<your-repo-name>/`
 
-### Blackboard Ultra / Canvas Embed Code
-Use the following iframe template to embed directly into an HTML block or document page:
+---
+
+## 🧩 LMS Integration (Blackboard Ultra / Canvas)
+
+To embed this interactive tool directly inside an LMS module or document page, paste the following iframe code:
 
 ```html
 <iframe 
-  src="[https://YOUR-GITHUB-USERNAME.github.io/YOUR-REPO-NAME/](https://YOUR-GITHUB-USERNAME.github.io/YOUR-REPO-NAME/)" 
+  src="https://<your-username>.github.io/<your-repo-name>/" 
   width="100%" 
-  height="1200px" 
+  height="900px" 
   style="border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);"
-  title="Media Production Workshop Interactive Activity">
+  title="Build Your Media Plan Interactive Tool">
 </iframe>
